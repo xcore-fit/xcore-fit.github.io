@@ -1,0 +1,47 @@
+name: Import product artwork
+
+on:
+  push:
+    paths:
+      - ".github/workflows/import-assets.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/source
+          curl -fsSL 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/00c8714e-cb40-468f-935d-baaf191b26c0.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZmJkYTgwYzE4NGRmNzU2MiIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTA4MTAyNX0.mdc8FbnQb1j6Dqq7ccig17hN5ZMcWWy3mrstIEzedF8' -o assets/source/01-hero.png
+          curl -fsSL 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/ac6d238e-2d9c-459d-8a4b-c7dad9f0075d.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMmI0NjIyYmE5N2RmYzdiMCIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTA2OTQ5OH0.xCWklJDg6Hzr7DXaCSZf4FKXJtTnWQlPIUeiFJ9I3gE' -o assets/source/02-color.png
+          curl -fsSL 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/fafe4f68-f011-4cc5-8043-bbf2b026d10d.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMGQwZWI4YmEyYjc5MWNjYSIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTExNjYwMn0.Q6Wm1p3GYK6AMawxVDA_WnJOjcOt174M2ZGopn6sZjk' -o assets/source/03-details.png
+          curl -fsSL 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/660ddc7a-2e0e-43fe-ba85-6feb68f673cb.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiZDhhZGIzZWFkMGI0Yjg4NyIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTE0MDg0Mn0.LXW6VPscGLS6MQfU1CVtgNUpe53GSEBe5whmmypIqjI' -o assets/source/04-why.png
+          curl -fsSL 'https://d2jqrm6oza8nb6.cloudfront.net/datasets/c02937d3-4c52-4505-835c-a5d87a7ef73b.png?_jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXlIYXNoIjoiMmI2YzA4OWZjODliM2E3OSIsImJ1Y2tldCI6InJ1bndheS1kYXRhc2V0cyIsInN0YWdlIjoicHJvZCIsImV4cCI6MTc5MTEzMzk4M30.e34XDhEwmAGHM8J0rKIvOp-Hu0eTf2PRW0AF3_hyx4s' -o assets/source/05-looks.png
+      - name: Optimize for mobile
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          src=Path("assets/source")
+          out=Path("assets")
+          for p in sorted(src.glob("*.png")):
+              im=Image.open(p).convert("RGB")
+              im.save(out/(p.stem+".webp"),"WEBP",quality=86,method=6)
+          PY
+          rm -rf assets/source
+      - name: Commit artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets
+          git commit -m "Add optimized bisht product artwork"
+          git push
