@@ -2,6 +2,8 @@ const CONFIG={
   endpoint:'https://script.google.com/macros/s/AKfycbxxBGHE4mZ5iDdplvvaFxVhrHoOMETyRoafgk8iG-DGx9vhY27JgFhc3VHFBO22hu4x0w/exec',
   snapPixelId:'233915bf-25f6-4119-9362-701fe3212185',
   sku:'BISHT-ROYAL',
+  receiverSku:'MULTI-COLLAGEN',
+  product:'بشت التميز الملكي',
   offers:{
     1:{label:'بشت واحد',price:399,backendOffer:1},
     2:{label:'2 بشت — واحد لك والثاني لشخص عزيز عليك',price:549,backendOffer:2}
@@ -12,7 +14,7 @@ const CONFIG={
   if(!CONFIG.snapPixelId)return;
   (function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function(){a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};a.queue=[];var s='script';var r=t.createElement(s);r.async=!0;r.src=n;var u=t.getElementsByTagName(s)[0];u.parentNode.insertBefore(r,u)})(window,document,'https://sc-static.net/scevent.min.js');
   window.snaptr('init',CONFIG.snapPixelId);
-  window.snaptr('track','PAGE_VIEW',{item_ids:[CONFIG.sku]});
+  window.snaptr('track','PAGE_VIEW',{item_ids:[CONFIG.sku],item_category:'BISHT'});
 })();
 
 const form=document.getElementById('order-form');
@@ -36,7 +38,7 @@ function trackCheckout(){
   if(checkoutTracked||!window.snaptr)return;
   const o=currentOffer();
   checkoutTracked=true;
-  window.snaptr('track','START_CHECKOUT',{price:o.price,currency:'SAR',item_ids:[CONFIG.sku]});
+  window.snaptr('track','START_CHECKOUT',{price:o.price,currency:'SAR',item_ids:[CONFIG.sku],item_category:'BISHT',number_items:o.code});
 }
 form.addEventListener('change',()=>{updateSummary();trackCheckout()});
 form.addEventListener('focusin',trackCheckout,{once:true});
@@ -44,12 +46,13 @@ updateSummary();
 
 function cleanPhone(v){return String(v||'').replace(/[^0-9+]/g,'').trim()}
 function utmObject(o){
+  const q=Object.fromEntries(new URLSearchParams(window.location.search));
   return {
-    utm_source:'xcorefit-bisht',
-    utm_medium:String(o.price),
-    utm_campaign:'بشت التميز الملكي',
-    utm_term:o.code===1?'1-bisht':'2-bisht',
-    utm_content:'xcore-fit.github.io'
+    utm_source:q.utm_source||'xcorefit-bisht',
+    utm_medium:q.utm_medium||'landing',
+    utm_campaign:q.utm_campaign||'bisht-royal',
+    utm_term:q.utm_term||(o.code===1?'1-bisht':'2-bisht'),
+    utm_content:q.utm_content||'xcore-fit.github.io'
   };
 }
 
@@ -92,7 +95,7 @@ form.addEventListener('submit',async(e)=>{
      Actual bisht product/price are stored in UTM fields and surfaced in the dedicated BISHT ORDERS sheet. */
   const payload={
     transactionId:tx,
-    product:'بشت التميز الملكي',
+    product:CONFIG.product,
     name,
     phone,
     address,
@@ -100,7 +103,7 @@ form.addEventListener('submit',async(e)=>{
     offer:o.label,
     price:o.price,
     country:'SA',
-    sku:'MULTI-COLLAGEN',
+    sku:CONFIG.receiverSku,
     currency:'SAR',
     pageUrl:window.location.href,
     source:'XCORE FIT Bisht Landing Page',
@@ -120,7 +123,7 @@ form.addEventListener('submit',async(e)=>{
 
     if(window.snaptr){
       window.snaptr('track','PURCHASE',{
-        price:o.price,currency:'SAR',transaction_id:tx,item_ids:[CONFIG.sku]
+        price:o.price,currency:'SAR',transaction_id:tx,item_ids:[CONFIG.sku],item_category:'BISHT',number_items:o.code
       });
     }
 
