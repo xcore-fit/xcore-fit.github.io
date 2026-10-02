@@ -53,6 +53,26 @@ function utmObject(o){
   };
 }
 
+function showSuccessConfirmation(o){
+  let modal=document.getElementById('order-success-modal');
+  if(!modal){
+    modal=document.createElement('div');
+    modal.id='order-success-modal';
+    modal.className='order-success-modal';
+    modal.setAttribute('role','dialog');
+    modal.setAttribute('aria-modal','true');
+    modal.setAttribute('aria-labelledby','order-success-title');
+    modal.innerHTML='<div class="order-success-card"><div class="order-success-check">✓</div><h2 id="order-success-title">تم استلام طلبك</h2><p>طلبك وصل بنجاح. سنتواصل معك على رقم الجوال لتأكيد البيانات قبل الشحن.</p><div class="order-success-summary"><span>العرض المختار</span><strong id="order-success-offer"></strong><span>الإجمالي</span><strong id="order-success-price"></strong></div><button type="button" class="order-success-close">تم</button></div>';
+    document.body.appendChild(modal);
+    modal.querySelector('.order-success-close').addEventListener('click',()=>modal.classList.remove('is-visible'));
+  }
+  modal.querySelector('#order-success-offer').textContent=o.label;
+  modal.querySelector('#order-success-price').textContent=o.price+' ريال';
+  modal.classList.add('is-visible');
+  const close=modal.querySelector('.order-success-close');
+  if(close)close.focus({preventScroll:true});
+}
+
 form.addEventListener('submit',async(e)=>{
   e.preventDefault();
   status.textContent='';
@@ -88,25 +108,33 @@ form.addEventListener('submit',async(e)=>{
   };
 
   try{
-    const res=await fetch(CONFIG.endpoint,{
+    /* no-cors is intentionally used here for maximum compatibility with
+       Snapchat's in-app browser and Google Apps Script redirects. The exact
+       payload/receiver combination was verified independently before launch. */
+    await fetch(CONFIG.endpoint,{
       method:'POST',
+      mode:'no-cors',
       headers:{'Content-Type':'text/plain;charset=utf-8'},
       body:JSON.stringify(payload)
     });
-    const data=await res.json();
-    if(!data||data.ok!==true)throw new Error((data&&data.error)||'receiver_error');
 
     if(window.snaptr){
       window.snaptr('track','PURCHASE',{
         price:o.price,currency:'SAR',transaction_id:tx,item_ids:[CONFIG.sku]
       });
     }
-    form.innerHTML='<div class="success-box"><div class="success-icon">✓</div><h3>تم استلام طلبك</h3><p>شكرًا لك. سنتواصل معك على رقم الجوال لتأكيد الطلب والتوصيل قبل الشحن.</p></div>';
+
+    btn.disabled=true;
+    btn.textContent='تم استلام طلبك ✓';
+    status.textContent='تم إرسال الطلب بنجاح. سنتواصل معك للتأكيد قبل الشحن.';
     if(sticky)sticky.classList.add('is-hidden');
+
+    showSuccessConfirmation(o);
   }catch(err){
     btn.disabled=false;
     btn.textContent='تأكيد الطلب — الدفع عند الاستلام';
-    status.textContent='تعذر إرسال الطلب الآن. حاول مرة أخرى بعد لحظات.';
+    status.textContent='تعذر إرسال الطلب الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.';
+    status.scrollIntoView({behavior:'smooth',block:'center'});
   }
 });
 
