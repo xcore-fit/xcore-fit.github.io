@@ -22,7 +22,7 @@ const total=document.getElementById('summary-total');
 const offerSummary=document.getElementById('summary-offer');
 const status=document.getElementById('form-message');
 const sticky=document.getElementById('sticky-cta');
-const orderSection=document.getElementById('order');
+const checkoutSection=document.getElementById('checkout');
 let checkoutTracked=false;
 
 function currentOffer(){
@@ -141,10 +141,19 @@ form.addEventListener('submit',async(e)=>{
   }
 });
 
-if(sticky&&orderSection){
-  const observer=new IntersectionObserver(entries=>{
-    const visible=entries.some(x=>x.isIntersecting);
-    sticky.classList.toggle('is-hidden',visible);
-  },{threshold:.08});
-  observer.observe(orderSection);
+if(sticky&&checkoutSection){
+  const updateStickyVisibility=()=>{
+    const rect=checkoutSection.getBoundingClientRect();
+    const viewport=window.visualViewport?window.visualViewport.height:window.innerHeight;
+    const checkoutIsActive=rect.top<=viewport*0.92 && rect.bottom>=80;
+    sticky.classList.toggle('is-hidden',checkoutIsActive);
+  };
+
+  window.addEventListener('scroll',updateStickyVisibility,{passive:true});
+  window.addEventListener('resize',updateStickyVisibility,{passive:true});
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',updateStickyVisibility,{passive:true});
+    window.visualViewport.addEventListener('scroll',updateStickyVisibility,{passive:true});
+  }
+  requestAnimationFrame(updateStickyVisibility);
 }
