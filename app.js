@@ -206,13 +206,23 @@ if(sticky&&checkoutSection){
 }
 
 
-/* Reliable CTA-to-checkout navigation: always land at the top of the
-   complete order area so offers and delivery fields are visible in order. */
+/* Reliable CTA-to-checkout navigation.
+   Snapchat's in-app browser can resolve a first anchor click before deferred
+   sections finish their layout. Use an immediate absolute scroll and re-check
+   the target after layout settles so the first tap always lands at the start
+   of the complete order area. */
+function scrollToOrderStart(){
+  const target=document.getElementById('order');
+  if(!target)return;
+  const top=Math.max(0,window.pageYOffset+target.getBoundingClientRect().top-8);
+  window.scrollTo({top,left:0,behavior:'auto'});
+}
 document.addEventListener('click',event=>{
   const link=event.target.closest('a[href="#order"]');
   if(!link)return;
-  const target=document.getElementById('order');
-  if(!target)return;
   event.preventDefault();
-  target.scrollIntoView({behavior:'smooth',block:'start'});
-});
+  scrollToOrderStart();
+  requestAnimationFrame(()=>requestAnimationFrame(scrollToOrderStart));
+  setTimeout(scrollToOrderStart,180);
+  setTimeout(scrollToOrderStart,480);
+},{capture:true});
