@@ -42,9 +42,11 @@ function trackCheckout(){
 }
 form.addEventListener('change',()=>{updateSummary();trackCheckout()});
 const phoneField=form.elements.phone;
+const phoneErrorEl=document.getElementById('phone-error');
 if(phoneField){
   phoneField.addEventListener('input',()=>{
     phoneField.removeAttribute('aria-invalid');
+    if(phoneErrorEl)phoneErrorEl.textContent='';
     if(status.textContent.includes('رقم الهاتف'))status.textContent='';
   });
 }
@@ -95,16 +97,19 @@ form.addEventListener('submit',async(e)=>{
   const fd=new FormData(form);
   const name=String(fd.get('name')||'').trim();
   const phoneInput=form.elements.phone;
+  const phoneError=document.getElementById('phone-error');
   const phone=normalizeSaudiPhone(fd.get('phone'));
   const address=String(fd.get('address')||'').trim();
   const o=currentOffer();
   if(name.length<2){status.textContent='يرجى كتابة الاسم الكامل.';return}
   if(!phone){
-    status.textContent='رقم الهاتف غير صحيح. أدخل رقمًا سعوديًا صحيحًا مثل 05XXXXXXXX.';
+    status.textContent='';
+    if(phoneError) phoneError.textContent='رقم الهاتف غير صحيح';
     phoneInput.setAttribute('aria-invalid','true');
     phoneInput.focus();
     return;
   }
+  if(phoneError) phoneError.textContent='';
   phoneInput.removeAttribute('aria-invalid');
   if(address.length<2){status.textContent='يرجى كتابة المدينة.';return}
   const btn=form.querySelector('.submit-btn');
