@@ -54,11 +54,15 @@ form.addEventListener('focusin',trackCheckout,{once:true});
 updateSummary();
 
 function normalizeSaudiPhone(v){
-  const digits=String(v||'').replace(/\D/g,'');
-  if(/^05\d{8}$/.test(digits))return digits;
-  if(/^5\d{8}$/.test(digits))return '0'+digits;
-  if(/^9665\d{8}$/.test(digits))return '0'+digits.slice(3);
-  return null;
+  let value=String(v||'').trim()
+    .replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d)))
+    .replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d)))
+    .replace(/[\s()\-\u200e\u200f\u061c]/g,'');
+  if(value.startsWith('+966'))value='0'+value.slice(4);
+  else if(value.startsWith('00966'))value='0'+value.slice(5);
+  else if(value.startsWith('966'))value='0'+value.slice(3);
+  else if(/^5\d{8}$/.test(value))value='0'+value;
+  return /^05\d{8}$/.test(value)?value:null;
 }
 function utmObject(o){
   const q=Object.fromEntries(new URLSearchParams(window.location.search));
