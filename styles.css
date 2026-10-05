@@ -514,3 +514,29 @@ footer{padding-bottom:38px!important}
 @media(prefers-reduced-motion:reduce){
   .flow-cta__button{transition:none}
 }
+
+
+/* ===== CTA consistency polish · 2026-10-05 ===== */
+.premium-cta__copy strong,
+.flow-cta__copy strong{
+  letter-spacing:-.15px;
+}
+.premium-cta__copy small,
+.flow-cta__copy small{
+  opacity:.94;
+}
+.premium-cta__arrow,
+.flow-cta__arrow{
+  transition:transform .18s ease,background .18s ease;
+}
+.premium-cta:hover .premium-cta__arrow,
+.flow-cta__button:hover .flow-cta__arrow{
+  transform:translateX(-3px);
+  background:rgba(27,18,6,.15);
+}
+@media(max-width:430px){
+  .premium-cta__copy strong,
+  .flow-cta__copy strong{font-size:15px!important}
+  .premium-cta__copy small,
+  .flow-cta__copy small{font-size:9.5px!important}
+}
