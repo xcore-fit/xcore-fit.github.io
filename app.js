@@ -204,3 +204,15 @@ if(sticky&&checkoutSection){
   }
   requestAnimationFrame(updateStickyVisibility);
 }
+
+
+/* Reliable CTA-to-checkout navigation: always land at the top of the
+   complete order area so offers and delivery fields are visible in order. */
+document.addEventListener('click',event=>{
+  const link=event.target.closest('a[href="#order"]');
+  if(!link)return;
+  const target=document.getElementById('order');
+  if(!target)return;
+  event.preventDefault();
+  target.scrollIntoView({behavior:'smooth',block:'start'});
+});
