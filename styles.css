@@ -431,3 +431,86 @@ a{color:inherit;text-decoration:none}img{display:block;width:100%;height:auto}ma
   .offer-current small{font-size:10.5px!important}
   .sticky-cta__price b{font-size:16px!important}
 }
+
+
+/* ===== In-flow CTAs replacing sticky button · 2026-10-05 ===== */
+.flow-cta{
+  padding:16px 18px 18px;
+  background:linear-gradient(180deg,#0b0907,#100c08);
+  border-top:1px solid rgba(216,173,93,.16);
+  border-bottom:1px solid rgba(216,173,93,.16);
+}
+.flow-cta__button{
+  position:relative;
+  overflow:hidden;
+  width:min(100%,500px);
+  min-height:66px;
+  margin:0 auto;
+  padding:10px 12px 10px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  border:1px solid rgba(247,218,145,.72);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 18% 0,rgba(255,245,202,.30),transparent 34%),
+    linear-gradient(135deg,#f0cf7f 0%,#d4a549 42%,#ad762c 100%);
+  color:#171006;
+  box-shadow:0 14px 34px rgba(176,119,38,.24),inset 0 1px 0 rgba(255,255,255,.50);
+  transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;
+}
+.flow-cta__button:hover{
+  transform:translateY(-2px);
+  filter:saturate(1.04);
+  box-shadow:0 18px 42px rgba(176,119,38,.34),inset 0 1px 0 rgba(255,255,255,.58);
+}
+.flow-cta__button:active{transform:scale(.993)}
+.flow-cta__copy{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  text-align:right;
+  line-height:1.35;
+}
+.flow-cta__copy strong{
+  font-size:16px;
+  font-weight:900;
+}
+.flow-cta__copy small{
+  margin-top:4px;
+  color:#4d3517;
+  font-size:10.5px;
+  font-weight:700;
+}
+.flow-cta__arrow{
+  flex:0 0 42px;
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  border:1px solid rgba(74,48,14,.18);
+  background:rgba(27,18,6,.10);
+  color:#2b1c09;
+  font-size:22px;
+  font-weight:900;
+}
+.flow-cta--dark{background:linear-gradient(180deg,#0a0806,#151008)}
+.flow-cta--final{
+  padding-top:18px;
+  padding-bottom:22px;
+  background:radial-gradient(circle at 50% 0,#1f160b,#090806 72%);
+}
+footer{padding-bottom:38px!important}
+@media(max-width:430px){
+  .flow-cta{padding:13px 11px 15px}
+  .flow-cta__button{min-height:62px;padding:9px 10px 9px 13px;border-radius:16px}
+  .flow-cta__copy strong{font-size:15px}
+  .flow-cta__copy small{font-size:9.5px}
+  .flow-cta__arrow{width:38px;height:38px;flex-basis:38px;border-radius:12px;font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  .flow-cta__button{transition:none}
+}
