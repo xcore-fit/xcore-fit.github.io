@@ -41,10 +41,23 @@ function trackCheckout(){
   window.snaptr('track','START_CHECKOUT',{price:o.price,currency:'SAR',item_ids:[CONFIG.sku],item_category:'BISHT',number_items:o.code});
 }
 form.addEventListener('change',()=>{updateSummary();trackCheckout()});
+const phoneField=form.elements.phone;
+if(phoneField){
+  phoneField.addEventListener('input',()=>{
+    phoneField.removeAttribute('aria-invalid');
+    if(status.textContent.includes('رقم الهاتف'))status.textContent='';
+  });
+}
 form.addEventListener('focusin',trackCheckout,{once:true});
 updateSummary();
 
-function cleanPhone(v){return String(v||'').replace(/[^0-9+]/g,'').trim()}
+function normalizeSaudiPhone(v){
+  const digits=String(v||'').replace(/\D/g,'');
+  if(/^05\d{8}$/.test(digits))return digits;
+  if(/^5\d{8}$/.test(digits))return '0'+digits;
+  if(/^9665\d{8}$/.test(digits))return '0'+digits.slice(3);
+  return null;
+}
 function utmObject(o){
   const q=Object.fromEntries(new URLSearchParams(window.location.search));
   return {
@@ -81,11 +94,18 @@ form.addEventListener('submit',async(e)=>{
   status.textContent='';
   const fd=new FormData(form);
   const name=String(fd.get('name')||'').trim();
-  const phone=cleanPhone(fd.get('phone'));
+  const phoneInput=form.elements.phone;
+  const phone=normalizeSaudiPhone(fd.get('phone'));
   const address=String(fd.get('address')||'').trim();
   const o=currentOffer();
   if(name.length<2){status.textContent='يرجى كتابة الاسم الكامل.';return}
-  if(phone.replace(/\D/g,'').length<8){status.textContent='يرجى التأكد من رقم الجوال.';return}
+  if(!phone){
+    status.textContent='رقم الهاتف غير صحيح. أدخل رقمًا سعوديًا صحيحًا مثل 05XXXXXXXX.';
+    phoneInput.setAttribute('aria-invalid','true');
+    phoneInput.focus();
+    return;
+  }
+  phoneInput.removeAttribute('aria-invalid');
   if(address.length<2){status.textContent='يرجى كتابة المدينة.';return}
   const btn=form.querySelector('.submit-btn');
   btn.disabled=true;btn.textContent='جارٍ إرسال طلبك…';
