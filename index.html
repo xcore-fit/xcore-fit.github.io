@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="preload" as="image" href="assets/01-hero.webp" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=20261002-2">
+  <link rel="stylesheet" href="styles.css?v=20261005-premium-cta">
 </head>
 <body>
   <div class="announcement">
@@ -33,7 +33,13 @@
         <div class="hero-pills">
           <span>سكري شامبانيا</span><span>تطريز ذهبي</span><span>دفع عند الاستلام</span>
         </div>
-        <a class="primary-cta" href="#order">اختر عرضك الآن</a>
+        <a class="primary-cta premium-cta" href="#order" aria-label="احجز إصدارك الملكي الآن">
+          <span class="premium-cta__copy">
+            <strong>احجز إصدارك الملكي الآن</strong>
+            <small>الدفع عند الاستلام · تأكيد قبل الشحن</small>
+          </span>
+          <span class="premium-cta__arrow" aria-hidden="true">←</span>
+        </a>
       </div>
     </section>
 
@@ -158,7 +164,13 @@
       <span>ROYAL PRESENCE</span>
       <h2>حضور يسبقك</h2>
       <p>اختر عرضك الآن واحجز إصدارك قبل نفاد الكمية المتاحة للعرض.</p>
-      <a class="primary-cta" href="#order">أطلب بشت التميز الملكي</a>
+      <a class="primary-cta premium-cta premium-cta--final" href="#order" aria-label="أكمل طلب بشت التميز الملكي">
+        <span class="premium-cta__copy">
+          <strong>أكمل طلبك واختر باقتك</strong>
+          <small>إصدار واحد مختار · الدفع عند الاستلام</small>
+        </span>
+        <span class="premium-cta__arrow" aria-hidden="true">←</span>
+      </a>
     </section>
   </main>
 
@@ -168,8 +180,8 @@
     <small>الدفع عند الاستلام · السعودية</small>
   </footer>
 
-  <a href="#order" class="sticky-cta" id="sticky-cta">
-    <span>أطلب الآن</span>
+  <a href="#order" class="sticky-cta" id="sticky-cta" aria-label="احجز إصدارك الملكي">
+    <span class="sticky-cta__copy"><b>احجز إصدارك الآن</b><small>الدفع عند الاستلام</small></span>
     <strong>من 399 ريال</strong>
   </a>
 
