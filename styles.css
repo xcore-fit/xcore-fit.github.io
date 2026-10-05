@@ -624,7 +624,7 @@ footer{padding-bottom:38px!important}
 
 /* Reduce work before below-the-fold content enters the viewport. */
 @supports(content-visibility:auto){
-  .feature-grid,.quote-section,.social-proof-copy,.order-confidence,.offer-intro,.checkout,.faq,.final-cta{
+  .feature-grid,.quote-section,.social-proof-copy,.faq,.final-cta{
     content-visibility:auto;
     contain-intrinsic-size:auto 520px;
   }
@@ -641,4 +641,16 @@ footer{padding-bottom:38px!important}
   .order-confidence__steps small{font-size:8.5px}
   .order-confidence__trust{gap:4px}
   .order-confidence__trust span{padding:7px 4px;font-size:8px}
+}
+
+
+/* ===== Reliable checkout anchor positioning · 2026-10-05 ===== */
+#order{
+  scroll-margin-top:12px;
+}
+.offer-intro,
+.checkout,
+.order-confidence{
+  content-visibility:visible!important;
+  contain:none!important;
 }
