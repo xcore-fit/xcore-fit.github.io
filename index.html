@@ -135,7 +135,7 @@
 
         <div class="fields">
           <label><span>الاسم</span><input name="name" autocomplete="name" required minlength="2"></label>
-          <label><span>رقم الهاتف</span><input name="phone" type="tel" inputmode="numeric" autocomplete="tel" required maxlength="13" aria-describedby="form-message"></label>
+          <label class="phone-field"><span>رقم الهاتف</span><input name="phone" type="tel" inputmode="numeric" autocomplete="tel" required maxlength="13" aria-describedby="phone-error"><small id="phone-error" class="phone-error" role="alert" aria-live="polite"></small></label>
           <label><span>المدينة</span><input name="address" autocomplete="address-level2" required></label>
         </div>
 
@@ -185,6 +185,6 @@
     <strong>من 399 ريال</strong>
   </a>
 
-  <script src="app.js?v=20261005-phone-validation" defer></script>
+  <script src="app.js?v=20261005-phone-error-inline" defer></script>
 </body>
 </html>
