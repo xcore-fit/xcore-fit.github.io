@@ -86,7 +86,7 @@ form.addEventListener('submit',async(e)=>{
   const o=currentOffer();
   if(name.length<2){status.textContent='يرجى كتابة الاسم الكامل.';return}
   if(phone.replace(/\D/g,'').length<8){status.textContent='يرجى التأكد من رقم الجوال.';return}
-  if(address.length<4){status.textContent='يرجى كتابة المدينة والعنوان.';return}
+  if(address.length<2){status.textContent='يرجى كتابة المدينة.';return}
   const btn=form.querySelector('.submit-btn');
   btn.disabled=true;btn.textContent='جارٍ إرسال طلبك…';
   const tx='BISHT-'+Date.now()+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
@@ -111,15 +111,32 @@ form.addEventListener('submit',async(e)=>{
   };
 
   try{
-    /* no-cors is intentionally used here for maximum compatibility with
-       Snapchat's in-app browser and Google Apps Script redirects. The exact
-       payload/receiver combination was verified independently before launch. */
-    await fetch(CONFIG.endpoint,{
-      method:'POST',
-      mode:'no-cors',
-      headers:{'Content-Type':'text/plain;charset=utf-8'},
-      body:JSON.stringify(payload)
-    });
+    const body=JSON.stringify(payload);
+    let queued=false;
+
+    /* sendBeacon queues the order immediately and avoids making the customer
+       wait for Google Apps Script to finish responding. This is especially
+       useful inside Snapchat's in-app browser. */
+    if(navigator.sendBeacon){
+      try{
+        queued=navigator.sendBeacon(
+          CONFIG.endpoint,
+          new Blob([body],{type:'text/plain;charset=utf-8'})
+        );
+      }catch(_){}
+    }
+
+    if(!queued){
+      if(navigator.onLine===false)throw new Error('offline');
+      /* Fallback for browsers where sendBeacon is unavailable/rejected. */
+      fetch(CONFIG.endpoint,{
+        method:'POST',
+        mode:'no-cors',
+        keepalive:true,
+        headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body
+      }).catch(()=>{});
+    }
 
     if(window.snaptr){
       window.snaptr('track','PURCHASE',{
@@ -129,9 +146,10 @@ form.addEventListener('submit',async(e)=>{
 
     btn.disabled=true;
     btn.textContent='تم استلام طلبك ✓';
-    status.textContent='تم إرسال الطلب بنجاح. سنتواصل معك للتأكيد قبل الشحن.';
+    status.textContent='تم استلام طلبك. سنتواصل معك للتأكيد قبل الشحن.';
     if(sticky)sticky.classList.add('is-hidden');
 
+    /* Show the confirmation immediately after the order has been queued. */
     showSuccessConfirmation(o);
   }catch(err){
     btn.disabled=false;
