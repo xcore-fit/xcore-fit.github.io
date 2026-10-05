@@ -216,3 +216,133 @@ a{color:inherit;text-decoration:none}img{display:block;width:100%;height:auto}ma
   .sticky-cta__price b{font-size:13px}
   .sticky-cta__price del{font-size:9px}
 }
+
+
+/* ===== Checkout hierarchy refinement · 2026-10-05 ===== */
+.checkout form{
+  padding:15px;
+}
+
+/* Make offer cards more compact so delivery details become the visual focus */
+.offers{
+  width:min(100%,560px);
+  margin:0 auto;
+  gap:8px;
+}
+.offer-card{
+  min-height:78px;
+  padding:11px 13px;
+  gap:10px;
+  border-radius:14px;
+}
+.offer-selector{
+  width:21px;
+  height:21px;
+}
+.offer-card:has(input:checked) .offer-selector:after{
+  width:10px;
+  height:10px;
+}
+.offer-main b{font-size:15px}
+.offer-main small{
+  margin-top:2px;
+  font-size:10.5px;
+  line-height:1.4;
+}
+.offer-price strong{font-size:23px}
+.offer-price small{font-size:10px}
+.offer-price del{font-size:9.5px;margin-top:3px}
+.offer-price em{font-size:9px;margin-top:4px}
+.badge{
+  top:-7px;
+  left:12px;
+  padding:3px 8px;
+  font-size:9px;
+}
+
+/* Give delivery details stronger hierarchy and more breathing room */
+.checkout-title{
+  margin:22px 0 14px;
+  padding:17px 16px 13px;
+  border:1px solid rgba(216,173,93,.22);
+  border-radius:16px;
+  background:linear-gradient(135deg,rgba(216,173,93,.09),rgba(255,255,255,.018));
+  text-align:right;
+}
+.checkout-title h3{
+  margin:0 0 6px;
+  color:#f7e7c7;
+  font-size:24px;
+  font-weight:800;
+  line-height:1.35;
+}
+.checkout-title p{
+  margin:0;
+  color:#cdbfa9;
+  font-size:13px;
+  line-height:1.75;
+}
+
+.fields{
+  gap:14px;
+}
+.fields label span{
+  margin:0 4px 7px;
+  color:#f1dfbf;
+  font-size:14px;
+  font-weight:800;
+}
+.fields input{
+  height:61px;
+  padding:0 16px;
+  border:1.4px solid rgba(216,173,93,.34);
+  border-radius:14px;
+  background:#090806;
+  color:#fff;
+  font-size:16px;
+  font-weight:600;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+.fields input:focus{
+  border-color:#e0b965;
+  box-shadow:0 0 0 4px rgba(216,173,93,.12),inset 0 1px 0 rgba(255,255,255,.03);
+}
+.phone-error{
+  font-size:12.5px;
+  margin-top:7px!important;
+}
+
+/* Keep the summary secondary to the input area */
+.order-summary{
+  margin-top:17px;
+}
+
+@media(max-width:430px){
+  .checkout{padding-inline:9px}
+  .checkout form{padding:12px}
+  .offer-card{
+    min-height:72px;
+    padding:10px 9px;
+    gap:8px;
+  }
+  .offer-main b{font-size:14px}
+  .offer-main small{font-size:9.5px}
+  .offer-price strong{font-size:21px}
+  .offer-price del{font-size:9px}
+  .offer-price em{font-size:8.5px}
+  .checkout-title{
+    margin:20px 0 13px;
+    padding:15px 13px 12px;
+    border-radius:14px;
+  }
+  .checkout-title h3{font-size:22px}
+  .checkout-title p{font-size:12px}
+  .fields{gap:13px}
+  .fields label span{font-size:13.5px}
+  .fields input{
+    height:59px;
+    padding:0 14px;
+    font-size:16px;
+    border-radius:13px;
+  }
+}
