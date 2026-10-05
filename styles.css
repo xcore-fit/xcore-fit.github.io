@@ -623,12 +623,6 @@ footer{padding-bottom:38px!important}
 }
 
 /* Reduce work before below-the-fold content enters the viewport. */
-@supports(content-visibility:auto){
-  .feature-grid,.quote-section,.social-proof-copy,.faq,.final-cta{
-    content-visibility:auto;
-    contain-intrinsic-size:auto 520px;
-  }
-}
 
 @media(max-width:430px){
   .order-confidence{padding:34px 10px 22px}
@@ -651,6 +645,17 @@ footer{padding-bottom:38px!important}
 .offer-intro,
 .checkout,
 .order-confidence{
+  content-visibility:visible!important;
+  contain:none!important;
+}
+
+
+/* ===== Checkout navigation hardening · 2026-10-05 ===== */
+html{scroll-behavior:auto!important}
+#order{
+  scroll-margin-top:0!important;
+}
+.feature-grid,.quote-section,.social-proof-copy,.order-confidence,.offer-intro,.checkout,.faq,.final-cta{
   content-visibility:visible!important;
   contain:none!important;
 }
