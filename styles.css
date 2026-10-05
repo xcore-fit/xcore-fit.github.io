@@ -540,3 +540,105 @@ footer{padding-bottom:38px!important}
   .premium-cta__copy small,
   .flow-cta__copy small{font-size:9.5px!important}
 }
+
+
+/* ===== Order confidence + performance polish · 2026-10-05 ===== */
+.order-confidence{
+  padding:42px 18px 28px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 0,rgba(216,173,93,.10),transparent 42%),
+    linear-gradient(180deg,#0c0a07,#090806);
+  border-top:1px solid rgba(216,173,93,.14);
+}
+.order-confidence h2{
+  margin:9px 0 6px;
+  font-family:"Noto Kufi Arabic",sans-serif;
+  color:#f5e6c8;
+  font-size:26px;
+  line-height:1.45;
+}
+.order-confidence__lead{
+  margin:0 0 18px;
+  color:#b9ac98;
+  font-size:13px;
+  line-height:1.7;
+}
+.order-confidence__steps{
+  width:min(100%,620px);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+.order-confidence__steps article{
+  min-width:0;
+  padding:16px 10px 14px;
+  border:1px solid rgba(216,173,93,.20);
+  border-radius:15px;
+  background:linear-gradient(145deg,#15110c,#0d0b08);
+  text-align:center;
+}
+.order-confidence__steps b{
+  width:29px;
+  height:29px;
+  margin:0 auto 8px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(216,173,93,.35);
+  background:rgba(216,173,93,.08);
+  color:#e9c979;
+  font-size:10px;
+}
+.order-confidence__steps strong{
+  display:block;
+  color:#f2e4ca;
+  font-size:13px;
+}
+.order-confidence__steps small{
+  display:block;
+  margin-top:4px;
+  color:#978a78;
+  font-size:10px;
+  line-height:1.55;
+}
+.order-confidence__trust{
+  width:min(100%,620px);
+  margin:11px auto 0;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+}
+.order-confidence__trust span{
+  min-width:0;
+  padding:8px 6px;
+  border-radius:10px;
+  background:rgba(132,201,155,.07);
+  border:1px solid rgba(132,201,155,.16);
+  color:#bcd8c5;
+  font-size:9px;
+  font-weight:700;
+  line-height:1.4;
+}
+
+/* Reduce work before below-the-fold content enters the viewport. */
+@supports(content-visibility:auto){
+  .feature-grid,.quote-section,.social-proof-copy,.order-confidence,.offer-intro,.checkout,.faq,.final-cta{
+    content-visibility:auto;
+    contain-intrinsic-size:auto 520px;
+  }
+}
+
+@media(max-width:430px){
+  .order-confidence{padding:34px 10px 22px}
+  .order-confidence h2{font-size:22px}
+  .order-confidence__lead{font-size:11.5px;margin-bottom:14px}
+  .order-confidence__steps{gap:6px}
+  .order-confidence__steps article{padding:13px 5px 12px;border-radius:13px}
+  .order-confidence__steps b{width:26px;height:26px;margin-bottom:6px;font-size:9px}
+  .order-confidence__steps strong{font-size:11px}
+  .order-confidence__steps small{font-size:8.5px}
+  .order-confidence__trust{gap:4px}
+  .order-confidence__trust span{padding:7px 4px;font-size:8px}
+}
