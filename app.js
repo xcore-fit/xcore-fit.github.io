@@ -5,8 +5,8 @@ const CONFIG={
   receiverSku:'MULTI-COLLAGEN',
   product:'بشت التميز الملكي',
   offers:{
-    1:{label:'بشت واحد',price:399,backendOffer:1},
-    2:{label:'2 بشت — واحد لك والثاني لشخص عزيز عليك',price:549,backendOffer:2}
+    1:{label:'بشت واحد',price:296,backendOffer:1},
+    2:{label:'2 بشت — واحد لك والثاني لشخص عزيز عليك',price:458,backendOffer:2}
   }
 };
 
