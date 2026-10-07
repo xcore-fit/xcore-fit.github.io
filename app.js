@@ -2,7 +2,7 @@ const CONFIG={
   endpoint:'https://script.google.com/macros/s/AKfycbxxBGHE4mZ5iDdplvvaFxVhrHoOMETyRoafgk8iG-DGx9vhY27JgFhc3VHFBO22hu4x0w/exec',
   snapPixelId:'233915bf-25f6-4119-9362-701fe3212185',
   sku:'BISHT-ROYAL',
-  receiverSku:'BISHT-ROYAL', // dedicated backend SKU so the receiver uses the bisht prices
+  receiverSku:'MULTI-COLLAGEN', // routing identifier used by the existing receiver
   orderSku:'BISHT-ROYAL',
   product:'بشت التميز الملكي',
   offers:{
