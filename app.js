@@ -142,7 +142,7 @@ form.addEventListener('submit',async(e)=>{
     sellingPrice:o.price,
     offerPrice:o.price,
     country:'SA',
-    sku:CONFIG.orderSku,
+    sku:CONFIG.receiverSku,
     receiverSku:CONFIG.receiverSku,
     productSku:CONFIG.sku,
     currency:'SAR',
