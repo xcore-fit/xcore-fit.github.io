@@ -2,7 +2,8 @@ const CONFIG={
   endpoint:'https://script.google.com/macros/s/AKfycbxxBGHE4mZ5iDdplvvaFxVhrHoOMETyRoafgk8iG-DGx9vhY27JgFhc3VHFBO22hu4x0w/exec',
   snapPixelId:'233915bf-25f6-4119-9362-701fe3212185',
   sku:'BISHT-ROYAL',
-  receiverSku:'MULTI-COLLAGEN',
+  receiverSku:'MULTI-COLLAGEN', // routing identifier used by the existing receiver
+  orderSku:'BISHT-ROYAL',
   product:'بشت التميز الملكي',
   offers:{
     1:{label:'بشت واحد',price:296,backendOffer:1},
@@ -130,9 +131,20 @@ form.addEventListener('submit',async(e)=>{
     address,
     offerCode:o.backendOffer,
     offer:o.label,
+    // Keep the displayed/selected offer price authoritative for the receiver.
+    // Multiple explicit aliases are intentional: the legacy receiver may read
+    // one of these names when writing the order into Google Sheets.
     price:o.price,
+    unitPrice:o.price,
+    totalPrice:o.price,
+    orderTotal:o.price,
+    amount:o.price,
+    sellingPrice:o.price,
+    offerPrice:o.price,
     country:'SA',
-    sku:CONFIG.receiverSku,
+    sku:CONFIG.orderSku,
+    receiverSku:CONFIG.receiverSku,
+    productSku:CONFIG.sku,
     currency:'SAR',
     pageUrl:window.location.href,
     source:'XCORE FIT Bisht Landing Page',
