@@ -227,15 +227,16 @@ if(sticky&&checkoutSection){
 
 /* One-tap CTA navigation: send every CTA straight to the actual form. */
 function scrollToCheckout(){
-  const target=document.getElementById('checkout');
+  const target=document.querySelector('#checkout form')||document.getElementById('checkout');
   if(!target)return;
-  target.scrollIntoView({behavior:'auto',block:'start',inline:'nearest'});
-  window.location.hash='checkout';
+  const top=target.getBoundingClientRect().top+window.pageYOffset-8;
+  window.scrollTo({top,behavior:'auto'});
+  try{history.replaceState(null,'','#checkout')}catch(_){}
 }
 document.addEventListener('click',event=>{
   const link=event.target.closest('a[href="#checkout"],a[href="#order"]');
   if(!link)return;
   event.preventDefault();
+  event.stopPropagation();
   scrollToCheckout();
-  requestAnimationFrame(scrollToCheckout);
 },{capture:true});
