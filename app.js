@@ -25,6 +25,7 @@ const status=document.getElementById('form-message');
 const sticky=document.getElementById('sticky-cta');
 const checkoutSection=document.getElementById('checkout');
 let checkoutTracked=false;
+let orderSubmitting=false;
 
 function currentOffer(){
   const code=Number(new FormData(form).get('offer')||1);
@@ -98,6 +99,7 @@ function showSuccessConfirmation(o){
 
 form.addEventListener('submit',async(e)=>{
   e.preventDefault();
+  if(orderSubmitting)return;
   status.textContent='';
   const fd=new FormData(form);
   const name=String(fd.get('name')||'').trim();
@@ -118,6 +120,7 @@ form.addEventListener('submit',async(e)=>{
   phoneInput.removeAttribute('aria-invalid');
   if(address.length<2){status.textContent='يرجى كتابة المدينة.';return}
   const btn=form.querySelector('.submit-btn');
+  orderSubmitting=true;
   btn.disabled=true;btn.textContent='جارٍ إرسال طلبك…';
   const tx='BISHT-'+Date.now()+'-'+Math.random().toString(36).slice(2,8).toUpperCase();
 
@@ -193,6 +196,7 @@ form.addEventListener('submit',async(e)=>{
     /* Show the confirmation immediately after the order has been queued. */
     showSuccessConfirmation(o);
   }catch(err){
+    orderSubmitting=false;
     btn.disabled=false;
     btn.textContent='تأكيد الطلب — الدفع عند الاستلام';
     status.textContent='تعذر إرسال الطلب الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.';
@@ -218,23 +222,17 @@ if(sticky&&checkoutSection){
 }
 
 
-/* Reliable CTA-to-checkout navigation.
-   Snapchat's in-app browser can resolve a first anchor click before deferred
-   sections finish their layout. Use an immediate absolute scroll and re-check
-   the target after layout settles so the first tap always lands at the start
-   of the complete order area. */
-function scrollToOrderStart(){
-  const target=document.getElementById('order');
+/* One-tap CTA navigation: send every CTA straight to the actual form. */
+function scrollToCheckout(){
+  const target=document.getElementById('checkout');
   if(!target)return;
-  const top=Math.max(0,window.pageYOffset+target.getBoundingClientRect().top-8);
-  window.scrollTo({top,left:0,behavior:'auto'});
+  target.scrollIntoView({behavior:'auto',block:'start',inline:'nearest'});
+  window.location.hash='checkout';
 }
 document.addEventListener('click',event=>{
-  const link=event.target.closest('a[href="#order"]');
+  const link=event.target.closest('a[href="#checkout"],a[href="#order"]');
   if(!link)return;
   event.preventDefault();
-  scrollToOrderStart();
-  requestAnimationFrame(()=>requestAnimationFrame(scrollToOrderStart));
-  setTimeout(scrollToOrderStart,180);
-  setTimeout(scrollToOrderStart,480);
+  scrollToCheckout();
+  requestAnimationFrame(scrollToCheckout);
 },{capture:true});
