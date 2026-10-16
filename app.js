@@ -191,6 +191,9 @@ form.addEventListener('submit',async(e)=>{
     btn.disabled=true;
     btn.textContent='تم استلام طلبك ✓';
     status.textContent='تم استلام طلبك. سنتواصل معك للتأكيد قبل الشحن.';
+    /* Once submitted, remove the pre-order instruction so it cannot reappear behind the confirmation. */
+    const deliveryIntro=form.querySelector('.checkout-title');
+    if(deliveryIntro)deliveryIntro.hidden=true;
     if(sticky)sticky.classList.add('is-hidden');
 
     /* Show the confirmation immediately after the order has been queued. */
