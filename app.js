@@ -2,7 +2,7 @@ const CONFIG={
   endpoint:'https://script.google.com/macros/s/AKfycbxxBGHE4mZ5iDdplvvaFxVhrHoOMETyRoafgk8iG-DGx9vhY27JgFhc3VHFBO22hu4x0w/exec',
   snapPixelId:'233915bf-25f6-4119-9362-701fe3212185',
   sku:'BISHT-ROYAL',
-  receiverSku:'MULTI-COLLAGEN', // routing identifier used by the existing receiver
+  receiverSku:'BISHT-ROYAL', // dedicated backend product and sheet
   orderSku:'BISHT-ROYAL',
   product:'بشت التميز الملكي',
   offers:{
@@ -171,7 +171,7 @@ form.addEventListener('submit',async(e)=>{
       if(!response.ok)throw new Error('http-error');
       result=await response.json();
       if(!result||result.ok!==true)throw new Error('order-rejected');
-      if(result.sku!=='MULTI-COLLAGEN' || result.sheet!=='Feuil1')throw new Error('receiver-mismatch');
+      if(result.sku!=='BISHT-ROYAL' || result.sheet!=='BISHT ORDERS')throw new Error('receiver-mismatch');
     }finally{clearTimeout(timeout);}
 
     if(window.snaptr){
