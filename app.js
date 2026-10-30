@@ -155,54 +155,49 @@ form.addEventListener('submit',async(e)=>{
   };
 
   try{
-    const body=JSON.stringify(payload);
-    let queued=false;
-
-    /* sendBeacon queues the order immediately and avoids making the customer
-       wait for Google Apps Script to finish responding. This is especially
-       useful inside Snapchat's in-app browser. */
-    if(navigator.sendBeacon){
-      try{
-        queued=navigator.sendBeacon(
-          CONFIG.endpoint,
-          new Blob([body],{type:'text/plain;charset=utf-8'})
-        );
-      }catch(_){}
-    }
-
-    if(!queued){
-      if(navigator.onLine===false)throw new Error('offline');
-      /* Fallback for browsers where sendBeacon is unavailable/rejected. */
-      fetch(CONFIG.endpoint,{
+    if(navigator.onLine===false)throw new Error('offline');
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),25000);
+    let response,result;
+    try{
+      response=await fetch(CONFIG.endpoint,{
         method:'POST',
-        mode:'no-cors',
-        keepalive:true,
+        mode:'cors',
+        credentials:'omit',
         headers:{'Content-Type':'text/plain;charset=utf-8'},
-        body
-      }).catch(()=>{});
-    }
+        body:JSON.stringify(payload),
+        signal:controller.signal
+      });
+      if(!response.ok)throw new Error('http-error');
+      result=await response.json();
+      if(!result||result.ok!==true)throw new Error('order-rejected');
+      if(result.sku!=='MULTI-COLLAGEN' || result.sheet!=='Feuil1')throw new Error('receiver-mismatch');
+    }finally{clearTimeout(timeout);}
 
     if(window.snaptr){
       window.snaptr('track','PURCHASE',{
-        price:o.price,currency:'SAR',transaction_id:tx,item_ids:[CONFIG.sku],item_category:'BISHT',number_items:o.code
+        price:o.price,currency:'SAR',transaction_id:tx,client_dedup_id:tx,
+        item_ids:[CONFIG.sku],item_category:'BISHT',number_items:o.code
       });
     }
 
+    orderSubmitting=false;
     btn.disabled=true;
     btn.textContent='تم استلام طلبك ✓';
-    status.textContent='تم استلام طلبك. سنتواصل معك للتأكيد قبل الشحن.';
-    /* Once submitted, remove the pre-order instruction so it cannot reappear behind the confirmation. */
+    status.textContent='تم تأكيد تسجيل طلبك بنجاح. سنتواصل معك للتأكيد قبل الشحن.';
     const deliveryIntro=form.querySelector('.checkout-title');
     if(deliveryIntro)deliveryIntro.hidden=true;
     if(sticky)sticky.classList.add('is-hidden');
-
-    /* Show the confirmation immediately after the order has been queued. */
     showSuccessConfirmation(o);
   }catch(err){
     orderSubmitting=false;
     btn.disabled=false;
     btn.textContent='تأكيد الطلب — الدفع عند الاستلام';
-    status.textContent='تعذر إرسال الطلب الآن. تحقق من اتصال الإنترنت وحاول مرة أخرى.';
+    status.textContent=err.name==='AbortError'
+      ? 'تأخر تأكيد تسجيل الطلب. لا تكرر الطلب قبل التأكد من وصوله.'
+      : err.message==='order-rejected'||err.message==='receiver-mismatch'
+        ? 'لم يتم تأكيد تسجيل الطلب. لم نعرض رسالة نجاح؛ يرجى مراجعة البيانات والمحاولة لاحقًا.'
+        : 'تعذر تأكيد تسجيل الطلب. يرجى التحقق من الاتصال والمحاولة لاحقًا.';
     status.scrollIntoView({behavior:'smooth',block:'center'});
   }
 });
